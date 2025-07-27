@@ -1,0 +1,58 @@
+{
+  "manifest_version": 3,
+  "name": "AI Prompt Engineer",
+  "version": "1.0.0",
+  "description": "Generate detailed, professional prompts from simple keywords for any LLM chat interface",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://chat.openai.com/*",
+    "https://chatgpt.com/*",
+    "https://claude.ai/*",
+    "https://chat.deepseek.com/*",
+    "https://gemini.google.com/*",
+    "https://www.bing.com/*",
+    "https://you.com/*",
+    "https://poe.com/*",
+    "https://api.novita.ai/*"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://chat.openai.com/*",
+        "https://chatgpt.com/*",
+        "https://claude.ai/*",
+        "https://chat.deepseek.com/*",
+        "https://gemini.google.com/*",
+        "https://www.bing.com/*",
+        "https://you.com/*",
+        "https://poe.com/*"
+      ],
+      "js": ["content.js"],
+      "css": ["styles.css"],
+      "run_at": "document_end"
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "AI Prompt Engineer"
+  },
+  "icons": {
+    "16": "icons/logo.png",
+    "48": "icons/logo.png",
+    "128": "icons/logo.png"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["styles.css", "prompt-interface.html", "icons/logo.png", "config.js"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}
