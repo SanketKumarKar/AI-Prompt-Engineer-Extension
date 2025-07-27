@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "AI Prompt Engineer",
-  "version": "1.0.0",
-  "description": "Generate detailed, professional prompts from simple keywords for any LLM chat interface",
+  "version": "2.1.0",
+  "description": "Multi-platform AI prompt generator with specialized optimizations for Perplexity, ChatGPT, Claude, and other LLMs. Features structured bullet formatting and platform-specific enhancements.",
   "permissions": [
     "activeTab",
     "storage",
@@ -12,11 +12,13 @@
     "https://chat.openai.com/*",
     "https://chatgpt.com/*",
     "https://claude.ai/*",
+    "https://perplexity.ai/*",
     "https://chat.deepseek.com/*",
     "https://gemini.google.com/*",
-    "https://www.bing.com/*",
-    "https://you.com/*",
+    "https://bard.google.com/*",
+    "https://copilot.microsoft.com/*",
     "https://poe.com/*",
+    "https://huggingface.co/*",
     "https://api.novita.ai/*"
   ],
   "background": {
@@ -29,21 +31,19 @@
         "https://chat.openai.com/*",
         "https://chatgpt.com/*",
         "https://claude.ai/*",
+        "https://perplexity.ai/*",
         "https://chat.deepseek.com/*",
         "https://gemini.google.com/*",
-        "https://www.bing.com/*",
-        "https://you.com/*",
-        "https://poe.com/*"
+        "https://bard.google.com/*",
+        "https://copilot.microsoft.com/*",
+        "https://poe.com/*",
+        "https://huggingface.co/*"
       ],
       "js": ["content.js"],
       "css": ["styles.css"],
       "run_at": "document_end"
     }
   ],
-  "action": {
-    "default_popup": "popup.html",
-    "default_title": "AI Prompt Engineer"
-  },
   "icons": {
     "16": "icons/logo.png",
     "48": "icons/logo.png",
@@ -51,7 +51,7 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["styles.css", "prompt-interface.html", "icons/logo.png", "config.js"],
+      "resources": ["icons/logo.png"],
       "matches": ["<all_urls>"]
     }
   ]

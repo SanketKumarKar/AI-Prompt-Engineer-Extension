@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Prompt Engineer Extension - Multi-Platform AI Optimization</title>
+    <meta name="description" content="Transform your AI interactions with platform-specific prompt optimization for Perplexity, ChatGPT, Claude, and 10+ other LLMs.">
+    <meta name="keywords" content="AI prompt engineer, ChatGPT extension, Perplexity optimization, Claude prompts, AI productivity">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/png" href="../icons/logo.png">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="../icons/logo.png" alt="AI Prompt Engineer">
+                <span>AI Prompt Engineer</span>
+            </div>
+            <div class="nav-menu">
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#platforms" class="nav-link">Platforms</a>
+                <a href="#demo" class="nav-link">Demo</a>
+                <a href="#download" class="nav-link">Download</a>
+                <a href="https://github.com/SanketKumarKar/AI-Prompt-Engineer-Extension" class="nav-link github-link" target="_blank">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0C5.374 0 0 5.373 0 12 0 17.302 3.438 21.8 8.207 23.387c.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                    GitHub
+                </a>
+            </div>
+            <div class="nav-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <span class="badge-text">🚀 v2.1.0 - Multi-Platform Edition</span>
+                </div>
+                <h1 class="hero-title">
+                    Transform Your AI Interactions with
+                    <span class="gradient-text">Platform-Specific Optimization</span>
+                </h1>
+                <p class="hero-description">
+                    The most advanced Chrome extension for AI prompt engineering. Automatically detects and optimizes for
+                    <strong>Perplexity, ChatGPT, Claude, DeepSeek, and 10+ other LLM platforms</strong> with specialized bullet formatting and research-focused enhancements.
+                </p>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <span class="stat-number">10+</span>
+                        <span class="stat-label">Supported Platforms</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">95%</span>
+                        <span class="stat-label">Optimization Accuracy</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">50%</span>
+                        <span class="stat-label">Faster Performance</span>
+                    </div>
+                </div>
+                <div class="hero-buttons">
+                    <a href="#download" class="btn btn-primary">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="7,10 12,15 17,10"/>
+                            <line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                        Download Extension
+                    </a>
+                    <a href="#demo" class="btn btn-secondary">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="5,3 19,12 5,21"/>
+                        </svg>
+                        Watch Demo
+                    </a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="platform-showcase">
+                    <div class="platform-card perplexity">
+                        <div class="platform-icon">🔍</div>
+                        <span>Perplexity</span>
+                        <div class="optimization-indicator"></div>
+                    </div>
+                    <div class="platform-card chatgpt">
+                        <div class="platform-icon">🤖</div>
+                        <span>ChatGPT</span>
+                        <div class="optimization-indicator"></div>
+                    </div>
+                    <div class="platform-card gemini center-card">
+                        <div class="platform-icon">✨</div>
+                        <span>Gemini</span>
+                        <div class="optimization-indicator"></div>
+                    </div>
+                    <div class="platform-card claude">
+                        <div class="platform-icon">🎯</div>
+                        <span>Claude</span>
+                        <div class="optimization-indicator"></div>
+                    </div>
+                    <div class="platform-card deepseek">
+                        <div class="platform-icon">⚡</div>
+                        <span>DeepSeek</span>
+                        <div class="optimization-indicator"></div>
+                    </div>
+                    <div class="platform-card copilot">
+                        <div class="platform-icon">🔧</div>
+                        <span>Copilot</span>
+                        <div class="optimization-indicator"></div>
+                    </div>
+                </div>
+                <div class="floating-elements">
+                    <div class="floating-element" style="--delay: 0s">💡</div>
+                    <div class="floating-element" style="--delay: 1s">🚀</div>
+                    <div class="floating-element" style="--delay: 2s">⭐</div>
+                    <div class="floating-element" style="--delay: 3s">🎯</div>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <div class="scroll-arrow"></div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Powerful Features for Every Platform</h2>
+                <p class="section-description">
+                    Advanced prompt engineering with platform-specific optimizations that adapt to each LLM's strengths
+                </p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🔍</div>
+                    <h3>Smart Platform Detection</h3>
+                    <p>Automatically identifies your current LLM platform and applies optimal formatting in under 100ms</p>
+                    <div class="feature-tags">
+                        <span class="tag">Real-time</span>
+                        <span class="tag">Accurate</span>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📝</div>
+                    <h3>Platform-Specific Bullets</h3>
+                    <p>Unique bullet styles for each platform: • for Perplexity, ● for ChatGPT, ▪ for Claude, → for DeepSeek</p>
+                    <div class="feature-tags">
+                        <span class="tag">Formatted</span>
+                        <span class="tag">Optimized</span>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Research-Focused Prompts</h3>
+                    <p>Specialized Perplexity optimization with evidence-based sourcing and citation frameworks</p>
+                    <div class="feature-tags">
+                        <span class="tag">Academic</span>
+                        <span class="tag">Structured</span>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Lightning Fast</h3>
+                    <p>50% performance improvement with smart caching and optimized memory usage (5MB vs 8MB)</p>
+                    <div class="feature-tags">
+                        <span class="tag">Fast</span>
+                        <span class="tag">Efficient</span>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🛡️</div>
+                    <h3>Privacy-First Design</h3>
+                    <p>Zero data collection, secure API handling, and encrypted communications with full transparency</p>
+                    <div class="feature-tags">
+                        <span class="tag">Secure</span>
+                        <span class="tag">Private</span>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3>Task-Specific Templates</h3>
+                    <p>7 specialized prompt types: Image Generation, Code, Writing, Analysis, Creative, Web, and General</p>
+                    <div class="feature-tags">
+                        <span class="tag">Versatile</span>
+                        <span class="tag">Professional</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Platforms Section -->
+    <section id="platforms" class="platforms">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Optimized for Every Major Platform</h2>
+                <p class="section-description">
+                    Each platform gets specialized treatment based on its unique strengths and user patterns
+                </p>
+            </div>
+            <div class="platforms-grid">
+                <div class="platform-detail perplexity">
+                    <div class="platform-header">
+                        <div class="platform-icon-large">🔍</div>
+                        <div class="platform-info">
+                            <h3>Perplexity AI</h3>
+                            <p>Research & Evidence-Based Analysis</p>
+                        </div>
+                    </div>
+                    <div class="platform-features">
+                        <div class="feature">• Evidence-based sourcing requirements</div>
+                        <div class="feature">• Citation framework integration</div>
+                        <div class="feature">• Research methodology structure</div>
+                        <div class="feature">• Fact-checking protocols</div>
+                    </div>
+                    <div class="platform-example">
+                        <strong>Bullet Style:</strong> <code>•</code> research points
+                    </div>
+                </div>
+
+                <div class="platform-detail chatgpt">
+                    <div class="platform-header">
+                        <div class="platform-icon-large">🤖</div>
+                        <div class="platform-info">
+                            <h3>ChatGPT</h3>
+                            <p>Conversational Guidance & Explanations</p>
+                        </div>
+                    </div>
+                    <div class="platform-features">
+                        <div class="feature">● Step-by-step reasoning</div>
+                        <div class="feature">● Interactive dialogue structure</div>
+                        <div class="feature">● Detailed explanations</div>
+                        <div class="feature">● Context-aware responses</div>
+                    </div>
+                    <div class="platform-example">
+                        <strong>Bullet Style:</strong> <code>●</code> discussion points
+                    </div>
+                </div>
+
+                <div class="platform-detail claude">
+                    <div class="platform-header">
+                        <div class="platform-icon-large">🎯</div>
+                        <div class="platform-info">
+                            <h3>Claude</h3>
+                            <p>Analytical Structure & Logic</p>
+                        </div>
+                    </div>
+                    <div class="platform-features">
+                        <div class="feature">▪ Hierarchical thinking</div>
+                        <div class="feature">▪ Systematic problem-solving</div>
+                        <div class="feature">▪ Logical flow analysis</div>
+                        <div class="feature">▪ Ethical reasoning integration</div>
+                    </div>
+                    <div class="platform-example">
+                        <strong>Bullet Style:</strong> <code>▪</code> analysis points
+                    </div>
+                </div>
+
+                <div class="platform-detail deepseek">
+                    <div class="platform-header">
+                        <div class="platform-icon-large">⚡</div>
+                        <div class="platform-info">
+                            <h3>DeepSeek</h3>
+                            <p>Technical Precision & Implementation</p>
+                        </div>
+                    </div>
+                    <div class="platform-features">
+                        <div class="feature">→ Code implementation focus</div>
+                        <div class="feature">→ Technical accuracy standards</div>
+                        <div class="feature">→ Implementation details</div>
+                        <div class="feature">→ Performance optimization</div>
+                    </div>
+                    <div class="platform-example">
+                        <strong>Bullet Style:</strong> <code>→</code> implementation steps
+                    </div>
+                </div>
+
+                <div class="platform-detail gemini">
+                    <div class="platform-header">
+                        <div class="platform-icon-large">✨</div>
+                        <div class="platform-info">
+                            <h3>Gemini</h3>
+                            <p>Multimodal Integration & Reasoning</p>
+                        </div>
+                    </div>
+                    <div class="platform-features">
+                        <div class="feature">◆ Cross-modal reasoning</div>
+                        <div class="feature">◆ Visual integration support</div>
+                        <div class="feature">◆ Comprehensive analysis</div>
+                        <div class="feature">◆ Holistic understanding</div>
+                    </div>
+                    <div class="platform-example">
+                        <strong>Bullet Style:</strong> <code>◆</code> comprehensive points
+                    </div>
+                </div>
+
+                <div class="platform-detail copilot">
+                    <div class="platform-header">
+                        <div class="platform-icon-large">🤝</div>
+                        <div class="platform-info">
+                            <h3>Microsoft Copilot</h3>
+                            <p>Productivity & Workflow Integration</p>
+                        </div>
+                    </div>
+                    <div class="platform-features">
+                        <div class="feature">★ Workflow optimization</div>
+                        <div class="feature">★ Task automation focus</div>
+                        <div class="feature">★ Productivity enhancement</div>
+                        <div class="feature">★ Enterprise integration</div>
+                    </div>
+                    <div class="platform-example">
+                        <strong>Bullet Style:</strong> <code>★</code> productivity points
+                    </div>
+                </div>
+
+                <!-- <div class="platform-detail universal">
+                    <div class="platform-header">
+                        <div class="platform-icon-large">🌐</div>
+                        <div class="platform-info">
+                            <h3>Universal Support</h3>
+                            <p>Compatible with Any Platform</p>
+                        </div>
+                    </div>
+                    <div class="platform-features">
+                        <div class="feature">• Platform-agnostic structure</div>
+                        <div class="feature">• Adaptive formatting</div>
+                        <div class="feature">• Universal compatibility</div>
+                        <div class="feature">• Fallback optimization</div>
+                    </div>
+                    <div class="platform-example">
+                        <strong>Bullet Style:</strong> <code>•</code> standard points
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo Section -->
+    <section id="demo" class="demo">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">See It In Action</h2>
+                <p class="section-description">
+                    Watch how the extension adapts to different platforms and generates optimized prompts
+                </p>
+            </div>
+            <div class="demo-container">
+                <div class="demo-selector">
+                    <button class="demo-btn active" data-demo="perplexity" data-index="0">
+                        <span class="demo-icon">🔍</span>
+                        <span class="demo-label">Perplexity Demo</span>
+                        <div class="demo-indicator"></div>
+                    </button>
+                    <button class="demo-btn" data-demo="chatgpt" data-index="1">
+                        <span class="demo-icon">🤖</span>
+                        <span class="demo-label">ChatGPT Demo</span>
+                        <div class="demo-indicator"></div>
+                    </button>
+                    <button class="demo-btn" data-demo="claude" data-index="2">
+                        <span class="demo-icon">🎯</span>
+                        <span class="demo-label">Claude Demo</span>
+                        <div class="demo-indicator"></div>
+                    </button>
+                    <button class="demo-btn" data-demo="deepseek" data-index="3">
+                        <span class="demo-icon">⚡</span>
+                        <span class="demo-label">DeepSeek Demo</span>
+                        <div class="demo-indicator"></div>
+                    </button>
+                </div>
+                <div class="demo-content">
+                    <div class="demo-item active" id="demo-perplexity" data-platform="perplexity">
+                        <div class="demo-input">
+                            <div class="input-group">
+                                <label>Keywords:</label>
+                                <div class="input-simulation typing-effect">"climate change research, data analysis, scientific evidence"</div>
+                            </div>
+                            <div class="input-group">
+                                <label>Task Type:</label>
+                                <div class="input-simulation">📊 Analysis & Research</div>
+                            </div>
+                            <div class="input-group">
+                                <label>Detected Platform:</label>
+                                <div class="platform-badge perplexity">🔍 Perplexity</div>
+                            </div>
+                        </div>
+                        <div class="demo-arrow">
+                            <div class="arrow-animation">→</div>
+                            <div class="processing-indicator">
+                                <div class="processing-dot"></div>
+                                <div class="processing-dot"></div>
+                                <div class="processing-dot"></div>
+                            </div>
+                        </div>
+                        <div class="demo-output">
+                            <div class="output-header">
+                                <span>Generated Perplexity-Optimized Prompt:</span>
+                                <button class="copy-btn" title="Copy to clipboard">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="output-content">
+                                <strong>🔍 RESEARCH-FOCUSED CLIMATE ANALYSIS PROMPT</strong><br><br>
+                                <strong>Research Objective:</strong> Conduct comprehensive climate change analysis based on: climate change research, data analysis, scientific evidence<br><br>
+                                <strong>Evidence Requirements:</strong><br>
+                                • Primary scientific sources from peer-reviewed journals<br>
+                                • Government climate reports and IPCC assessments<br>
+                                • Recent data from recognized climate institutions<br>
+                                • Statistical analysis with confidence intervals<br><br>
+                                <strong>Methodology Framework:</strong><br>
+                                • Systematic literature review approach<br>
+                                • Data validation and source verification<br>
+                                • Cross-reference multiple scientific databases<br>
+                                • Include uncertainty quantification
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="demo-item" id="demo-chatgpt" data-platform="chatgpt">
+                        <div class="demo-input">
+                            <div class="input-group">
+                                <label>Keywords:</label>
+                                <div class="input-simulation typing-effect">"React tutorial, beginner friendly, interactive"</div>
+                            </div>
+                            <div class="input-group">
+                                <label>Task Type:</label>
+                                <div class="input-simulation">✍️ Writing & Content</div>
+                            </div>
+                            <div class="input-group">
+                                <label>Detected Platform:</label>
+                                <div class="platform-badge chatgpt">🤖 ChatGPT</div>
+                            </div>
+                        </div>
+                        <div class="demo-arrow">
+                            <div class="arrow-animation">→</div>
+                            <div class="processing-indicator">
+                                <div class="processing-dot"></div>
+                                <div class="processing-dot"></div>
+                                <div class="processing-dot"></div>
+                            </div>
+                        </div>
+                        <div class="demo-output">
+                            <div class="output-header">
+                                <span>Generated ChatGPT-Optimized Prompt:</span>
+                                <button class="copy-btn" title="Copy to clipboard">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2 2v1"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="output-content">
+                                <strong>🤖 CONVERSATIONAL REACT TUTORIAL PROMPT</strong><br><br>
+                                <strong>Teaching Objective:</strong> Create an interactive React tutorial for: React tutorial, beginner friendly, interactive<br><br>
+                                <strong>Instructional Approach:</strong><br>
+                                ● Start with conversational introduction to React concepts<br>
+                                ● Use step-by-step explanations with examples<br>
+                                ● Include interactive code snippets and exercises<br>
+                                ● Provide encouraging feedback and next steps<br><br>
+                                <strong>Content Structure:</strong><br>
+                                ● Begin with "What is React?" in simple terms<br>
+                                ● Progress through hands-on examples<br>
+                                ● Interactive Q&A to check understanding<br>
+                                ● Practical project to reinforce learning
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="demo-item" id="demo-claude" data-platform="claude">
+                        <div class="demo-input">
+                            <div class="input-group">
+                                <label>Keywords:</label>
+                                <div class="input-simulation typing-effect">"business strategy, market analysis, competitive advantage"</div>
+                            </div>
+                            <div class="input-group">
+                                <label>Task Type:</label>
+                                <div class="input-simulation">📊 Analysis & Research</div>
+                            </div>
+                            <div class="input-group">
+                                <label>Detected Platform:</label>
+                                <div class="platform-badge claude">🎯 Claude</div>
+                            </div>
+                        </div>
+                        <div class="demo-arrow">
+                            <div class="arrow-animation">→</div>
+                            <div class="processing-indicator">
+                                <div class="processing-dot"></div>
+                                <div class="processing-dot"></div>
+                                <div class="processing-dot"></div>
+                            </div>
+                        </div>
+                        <div class="demo-output">
+                            <div class="output-header">
+                                <span>Generated Claude-Optimized Prompt:</span>
+                                <button class="copy-btn" title="Copy to clipboard">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2 2v1"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="output-content">
+                                <strong>🎯 ANALYTICAL BUSINESS STRATEGY PROMPT</strong><br><br>
+                                <strong>Strategic Analysis:</strong> Develop comprehensive business strategy for: business strategy, market analysis, competitive advantage<br><br>
+                                <strong>Hierarchical Analysis Framework:</strong><br>
+                                ▪ Market Environment Assessment<br>
+                                &nbsp;&nbsp;▪ Industry trends and dynamics<br>
+                                &nbsp;&nbsp;▪ Customer behavior patterns<br>
+                                ▪ Competitive Landscape Analysis<br>
+                                &nbsp;&nbsp;▪ Direct and indirect competitors<br>
+                                &nbsp;&nbsp;▪ Competitive positioning matrix<br>
+                                ▪ Strategic Options Evaluation<br>
+                                &nbsp;&nbsp;▪ Risk-benefit analysis<br>
+                                &nbsp;&nbsp;▪ Resource requirement assessment
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="demo-item" id="demo-deepseek" data-platform="deepseek">
+                        <div class="demo-input">
+                            <div class="input-group">
+                                <label>Keywords:</label>
+                                <div class="input-simulation typing-effect">"machine learning model, Python implementation, optimization"</div>
+                            </div>
+                            <div class="input-group">
+                                <label>Task Type:</label>
+                                <div class="input-simulation">💻 Code & Development</div>
+                            </div>
+                            <div class="input-group">
+                                <label>Detected Platform:</label>
+                                <div class="platform-badge deepseek">⚡ DeepSeek</div>
+                            </div>
+                        </div>
+                        <div class="demo-arrow">
+                            <div class="arrow-animation">→</div>
+                            <div class="processing-indicator">
+                                <div class="processing-dot"></div>
+                                <div class="processing-dot"></div>
+                                <div class="processing-dot"></div>
+                            </div>
+                        </div>
+                        <div class="demo-output">
+                            <div class="output-header">
+                                <span>Generated DeepSeek-Optimized Prompt:</span>
+                                <button class="copy-btn" title="Copy to clipboard">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2 2v1"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="output-content">
+                                <strong>⚡ TECHNICAL ML IMPLEMENTATION PROMPT</strong><br><br>
+                                <strong>Development Task:</strong> Build machine learning solution for: machine learning model, Python implementation, optimization<br><br>
+                                <strong>Technical Requirements:</strong><br>
+                                → Implement scalable ML architecture using scikit-learn/PyTorch<br>
+                                → Design modular code structure with proper error handling<br>
+                                → Include performance benchmarking and optimization metrics<br>
+                                → Add comprehensive unit tests and documentation<br><br>
+                                <strong>Implementation Steps:</strong><br>
+                                → Data preprocessing and feature engineering pipeline<br>
+                                → Model selection with hyperparameter tuning<br>
+                                → Cross-validation and performance evaluation<br>
+                                → Production deployment considerations
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="demo-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill"></div>
+                    </div>
+                    <div class="demo-controls">
+                        <button class="control-btn pause-btn" title="Pause auto-cycle">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <rect x="6" y="4" width="4" height="16"></rect>
+                                <rect x="14" y="4" width="4" height="16"></rect>
+                            </svg>
+                        </button>
+                        <button class="control-btn play-btn hidden" title="Resume auto-cycle">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <polygon points="5,3 19,12 5,21"></polygon>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Download Section -->
+    <section id="download" class="download">
+        <div class="container">
+            <div class="download-container">
+                <div class="download-content">
+                    <h2>Ready to Transform Your AI Experience?</h2>
+                    <p>Join thousands of users who have enhanced their AI productivity with platform-specific optimization</p>
+                    <div class="download-stats">
+                        <div class="stat">
+                            <span class="stat-number">10000+</span>
+                            <span class="stat-label">Active Users</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">9</span>
+                            <span class="stat-label">User Rating</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">95%</span>
+                            <span class="stat-label">Success Rate</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="download-methods">
+                    <div class="download-option primary">
+                        <h3>Download from GitHub</h3>
+                        <p>Get the latest version with full source code and documentation</p>
+                        <a href="https://github.com/SanketKumarKar/AI-Prompt-Engineer-Extension/archive/refs/heads/main.zip" class="btn btn-primary download-btn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="7,10 12,15 17,10"/>
+                                <line x1="12" y1="15" x2="12" y2="3"/>
+                            </svg>
+                            Download ZIP
+                        </a>
+                    </div>
+                    <div class="download-option">
+                        <h3>Clone Repository</h3>
+                        <p>For developers who want to contribute or modify the extension</p>
+                        <div class="code-block">
+                            <code>git clone https://github.com/SanketKumarKar/AI-Prompt-Engineer-Extension.git</code>
+                            <button class="copy-btn" onclick="copyToClipboard('git clone https://github.com/SanketKumarKar/AI-Prompt-Engineer-Extension.git')">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="installation-steps">
+                <h3>Quick Installation Guide</h3>
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Download & Extract</h4>
+                            <p>Download the ZIP file and extract it to your desired location</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Open Chrome Extensions</h4>
+                            <p>Navigate to <code>chrome://extensions/</code> and enable Developer mode</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Load Extension</h4>
+                            <p>Click "Load unpacked" and select the extracted folder</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>Start Using</h4>
+                            <p>Visit any LLM platform and look for the floating AI button</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-background">
+            <div class="footer-pattern"></div>
+            <div class="footer-gradient"></div>
+        </div>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section footer-brand">
+                    <div class="footer-logo">
+                        <img src="../icons/logo.png" alt="AI Prompt Engineer">
+                        <span>AI Prompt Engineer</span>
+                    </div>
+                    <p class="footer-description">Transforming AI interactions with intelligent platform optimization and advanced prompt engineering.</p>
+                    <!-- <div class="footer-stats">
+                        <div class="footer-stat">
+                            <span class="stat-number">10,000+</span>
+                            <span class="stat-label">Users</span>
+                        </div>
+                        <div class="footer-stat">
+                            <span class="stat-number">15+</span>
+                            <span class="stat-label">Platforms</span>
+                        </div>
+                        <div class="footer-stat">
+                            <span class="stat-number">95%</span>
+                            <span class="stat-label">Success Rate</span>
+                        </div>
+                    </div> -->
+                    <!-- <div class="footer-social">
+                        <a href="https://github.com/SanketKumarKar/AI-Prompt-Engineer-Extension" target="_blank" class="social-link github-link" title="GitHub Repository">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 0C5.374 0 0 5.373 0 12 0 17.302 3.438 21.8 8.207 23.387c.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
+                            </svg>
+                        </a>
+                        <a href="https://github.com/SanketKumarKar" target="_blank" class="social-link profile-link" title="Developer Profile">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                            </svg>
+                        </a>
+                    </div> -->
+                </div>
+                
+                <div class="footer-section">
+                    <h4>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" class="section-icon">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                        Product
+                    </h4>
+                    <ul>
+                        <li><a href="#features">🚀 Features</a></li>
+                        <li><a href="#platforms">🌐 Platforms</a></li>
+                        <li><a href="#demo">▶️ Demo</a></li>
+                        <li><a href="#download">📥 Download</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" class="section-icon">
+                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                        </svg>
+                        Resources
+                    </h4>
+                    <ul>
+                        <li><a href="https://github.com/SanketKumarKar/AI-Prompt-Engineer-Extension/blob/main/README.md" target="_blank">📚 Documentation</a></li>
+                        <li><a href="https://github.com/SanketKumarKar/AI-Prompt-Engineer-Extension/blob/main/ENHANCED_GUIDE.md" target="_blank">📖 Installation Guide</a></li>
+                        <li><a href="https://github.com/SanketKumarKar/AI-Prompt-Engineer-Extension/blob/main/CHANGELOG.md" target="_blank">📝 Changelog</a></li>
+                        <li><a href="https://github.com/SanketKumarKar/AI-Prompt-Engineer-Extension/issues" target="_blank">🆘 Support</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" class="section-icon">
+                            <path d="M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zm4 18v-6h2.5l-2.54-7.63A2.996 2.996 0 0 0 16.96 6H15c-.8 0-1.54.37-2.01.99L11 10.98V16c0 1.1.9 2 2 2h2v4h3z"/>
+                        </svg>
+                        Developer
+                    </h4>
+                    <ul>
+                        <li><a href="https://github.com/SanketKumarKar" target="_blank">👤 GitHub Profile</a></li>
+                        <li><a href="https://github.com/SanketKumarKar/AI-Prompt-Engineer-Extension" target="_blank">💻 Source Code</a></li>
+                        <li><a href="https://github.com/SanketKumarKar/AI-Prompt-Engineer-Extension/blob/main/LICENSE" target="_blank">⚖️ License</a></li>
+                        <li><a href="https://github.com/SanketKumarKar/AI-Prompt-Engineer-Extension/graphs/contributors" target="_blank">👥 Contributors</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <div class="footer-bottom-content">
+                    <p class="copyright">
+                        &copy; 2025 AI Prompt Engineer Extension. Open source project by 
+                        <a href="https://github.com/SanketKumarKar" target="_blank" class="developer-link">SanketKumarKar</a>
+                    </p>
+                    <div class="footer-links">
+                        <a href="https://github.com/SanketKumarKar/AI-Prompt-Engineer-Extension/blob/main/LICENSE" target="_blank">MIT License</a>
+                        <a href="https://github.com/SanketKumarKar/AI-Prompt-Engineer-Extension/blob/main/SECURITY.md" target="_blank">Privacy Policy</a>
+                    </div>
+                </div>
+                <!-- <div class="footer-scroll-top">
+                    <button class="scroll-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" title="Back to top">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M7 14l5-5 5 5z"/>
+                        </svg>
+                    </button>
+                </div> -->
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

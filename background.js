@@ -1,177 +1,306 @@
-// AI Prompt Engineer - Enhanced Background Script with Structured Prompts
-// Security: API key is stored separately and not exposed to content scripts
+// AI Prompt Engineer - Optimized Background Script
+// Enhanced for performance, token efficiency, and effective prompt generation
 
 class PromptEngineer {
   constructor() {
-    this.apiKey = 'sk_L-HP58vV4AElrD-NbF5MdZUVNdi3b0HRLiRI5DTomX0'; // Secure storage
+    this.apiKey = 'sk_L-HP58vV4AElrD-NbF5MdZUVNdi3b0HRLiRI5DTomX0';
     this.apiBaseUrl = 'https://api.novita.ai/v3/openai';
     this.model = 'qwen/qwen3-235b-a22b-instruct-2507';
+    this.promptCache = new Map();
+    this.maxRetries = 3;
+    this.retryDelay = 1000;
+    this.supportedPlatforms = [
+      'chatgpt.com', 'chat.openai.com', 'claude.ai', 'perplexity.ai', 
+      'chat.deepseek.com', 'gemini.google.com', 'copilot.microsoft.com',
+      'poe.com', 'huggingface.co', 'bard.google.com'
+    ];
     this.initializeExtension();
   }
 
   initializeExtension() {
     chrome.runtime.onInstalled.addListener(() => {
-      console.log('AI Prompt Engineer extension installed - Enhanced version');
+      console.log('AI Prompt Engineer extension installed - Optimized version');
     });
 
-    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-      if (request.action === 'generatePrompt') {
-        this.generateStructuredPrompt(request.keywords, request.taskType)
-          .then(response => sendResponse({ success: true, prompt: response }))
-          .catch(error => {
-            console.error('Prompt generation error:', error);
-            sendResponse({ 
-              success: false, 
-              error: error.message,
-              fallback: this.generateFallbackPrompt(request.keywords, request.taskType)
-            });
+  chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.action === 'generatePrompt') {
+      this.generateOptimizedPrompt(request.keywords, request.taskType, request.platform)
+        .then(response => sendResponse({ success: true, prompt: response }))
+        .catch(error => {
+          console.error('Prompt generation error:', error);
+          sendResponse({ 
+            success: false, 
+            error: error.message,
+            fallback: this.generateFallbackPrompt(request.keywords, request.taskType, request.platform)
           });
-        return true; // Will respond asynchronously
-      }
-    });
+        });
+      return true;
+    }
+  });
   }
 
-  // Enhanced prompt templates for each task type
-  getPromptTemplate(taskType) {
-    const templates = {
+  // Optimized template system - Concise but powerful
+  getOptimizedTemplate(taskType) {
+    const coreTemplates = {
       'image-generation': {
-        systemPrompt: `You are a master AI art director and prompt engineer specializing in creating detailed, high-quality prompts for image generation models like DALL-E, Midjourney, Stable Diffusion, and others. Your expertise lies in translating simple concepts into comprehensive visual descriptions that produce stunning, professional-quality images.`,
-        structure: {
-          sections: ['Visual Composition', 'Style & Aesthetics', 'Technical Specifications', 'Mood & Atmosphere', 'Additional Details'],
-          focus: 'artistic vision, technical precision, and commercial viability'
-        }
+        roleDefinition: 'Expert AI art director with 15+ years in visual design and commercial photography',
+        systemFocus: 'Transform keywords into comprehensive visual specifications with technical precision',
+        outputStructure: ['Visual Concept', 'Technical Specs', 'Style Guide', 'Quality Standards'],
+        keyPrinciples: 'role clarity, systematic composition, technical accuracy'
       },
       'code-generation': {
-        systemPrompt: `You are a senior software architect and coding expert with extensive experience across multiple programming languages, frameworks, and best practices. You excel at creating comprehensive development prompts that result in clean, efficient, maintainable, and well-documented code.`,
-        structure: {
-          sections: ['Project Overview', 'Technical Requirements', 'Architecture & Design', 'Implementation Guidelines', 'Testing & Documentation'],
-          focus: 'code quality, scalability, and industry best practices'
-        }
+        roleDefinition: 'Senior software architect with expertise in modern development practices',
+        systemFocus: 'Create production-ready code solutions with clean architecture',
+        outputStructure: ['Architecture Overview', 'Implementation Plan', 'Code Standards', 'Testing Strategy'],
+        keyPrinciples: 'clean code, scalability, best practices'
       },
       'writing': {
-        systemPrompt: `You are a professional copywriter and content strategist with expertise in various writing styles, from technical documentation to creative content, marketing copy, and academic writing. You create prompts that ensure engaging, well-structured, and purposeful content.`,
-        structure: {
-          sections: ['Content Objective', 'Target Audience', 'Structure & Format', 'Tone & Style Guidelines', 'Key Messages & CTAs'],
-          focus: 'audience engagement, clarity, and desired outcomes'
-        }
+        roleDefinition: 'Professional content strategist with expertise in audience engagement',
+        systemFocus: 'Develop compelling content that achieves specific objectives',
+        outputStructure: ['Content Strategy', 'Audience Analysis', 'Structure Plan', 'Optimization Guidelines'],
+        keyPrinciples: 'audience focus, engagement, clear messaging'
       },
       'analysis': {
-        systemPrompt: `You are a data scientist and research analyst with expertise in statistical analysis, research methodology, and data interpretation. You create comprehensive analytical prompts that ensure thorough, unbiased, and actionable insights.`,
-        structure: {
-          sections: ['Analysis Objectives', 'Methodology & Approach', 'Data Requirements', 'Expected Deliverables', 'Validation & Quality Assurance'],
-          focus: 'accuracy, methodology, and actionable insights'
-        }
+        roleDefinition: 'Senior data analyst with expertise in research methodology',
+        systemFocus: 'Conduct rigorous analysis delivering actionable insights',
+        outputStructure: ['Research Framework', 'Methodology', 'Analysis Plan', 'Validation Process'],
+        keyPrinciples: 'data integrity, methodical approach, actionable insights'
       },
       'creative': {
-        systemPrompt: `You are a creative director and innovation strategist with expertise in ideation, storytelling, and creative problem-solving. You excel at crafting prompts that unlock creativity while maintaining focus and commercial viability.`,
-        structure: {
-          sections: ['Creative Brief', 'Inspiration & References', 'Creative Constraints', 'Target Outcomes', 'Evaluation Criteria'],
-          focus: 'originality, emotional impact, and brand alignment'
-        }
+        roleDefinition: 'Creative director with proven innovation strategy experience',
+        systemFocus: 'Generate breakthrough ideas balancing creativity with viability',
+        outputStructure: ['Creative Brief', 'Ideation Framework', 'Concept Development', 'Feasibility Assessment'],
+        keyPrinciples: 'innovation, practical creativity, strategic alignment'
       },
       'website': {
-        systemPrompt: `You are a full-stack web developer and UX/UI designer with expertise in modern web technologies, user experience design, and digital strategy. You create comprehensive web development prompts that result in functional, beautiful, and user-friendly websites.`,
-        structure: {
-          sections: ['Project Scope', 'Technical Stack', 'Design Requirements', 'Functionality Specifications', 'Performance & SEO'],
-          focus: 'user experience, technical excellence, and business objectives'
-        }
+        roleDefinition: 'Full-stack developer and UX specialist with modern web expertise',
+        systemFocus: 'Build user-centered websites with exceptional performance',
+        outputStructure: ['Project Scope', 'Technical Architecture', 'UX Strategy', 'Performance Plan'],
+        keyPrinciples: 'user experience, technical excellence, performance optimization'
       },
       'general': {
-        systemPrompt: `You are a versatile AI assistant and prompt engineering expert capable of adapting to any domain or task. You excel at creating comprehensive, well-structured prompts that ensure clarity, completeness, and optimal results regardless of the subject matter.`,
-        structure: {
-          sections: ['Task Definition', 'Context & Requirements', 'Approach & Methodology', 'Expected Outputs', 'Success Criteria'],
-          focus: 'clarity, completeness, and adaptability'
-        }
+        roleDefinition: 'Domain expert with systematic problem-solving expertise',
+        systemFocus: 'Deliver comprehensive solutions with professional excellence',
+        outputStructure: ['Problem Analysis', 'Solution Framework', 'Implementation Strategy', 'Quality Assurance'],
+        keyPrinciples: 'systematic thinking, comprehensive solutions, quality delivery'
       }
     };
 
-    return templates[taskType] || templates['general'];
+    return coreTemplates[taskType] || coreTemplates['general'];
   }
 
-  // Generate structured prompt based on task type
-  async generateStructuredPrompt(keywords, taskType) {
-    const template = this.getPromptTemplate(taskType);
+  // Keyword analysis for dynamic prompt optimization
+  analyzeKeywords(keywords) {
+    const keywordArray = keywords.toLowerCase().split(/[,\s]+/).filter(k => k.length > 2);
+    const complexity = keywordArray.length;
+    const technicalTerms = keywordArray.filter(k => 
+      /^(api|database|framework|algorithm|architecture|design|performance|security|responsive|modern|professional)$/i.test(k)
+    ).length;
     
-    const enhancedSystemPrompt = `${template.systemPrompt}
+    return {
+      count: complexity,
+      technical: technicalTerms > 0,
+      complexity: complexity > 4 ? 'high' : complexity > 2 ? 'medium' : 'low',
+      primaryKeywords: keywordArray.slice(0, 4).join(', '),
+      contextualHints: this.extractContextualHints(keywordArray)
+    };
+  }
 
-PROMPT ENGINEERING GUIDELINES:
-1. Create prompts that are specific, detailed, and actionable
-2. Structure information logically with clear sections
-3. Include relevant constraints and quality criteria
-4. Provide context and background information
-5. Specify desired output format and style
-6. Focus on ${template.structure.focus}
+  extractContextualHints(keywords) {
+    const contexts = {
+      technical: ['api', 'database', 'framework', 'algorithm', 'code', 'development'],
+      design: ['ui', 'ux', 'design', 'visual', 'aesthetic', 'layout', 'modern'],
+      business: ['strategy', 'marketing', 'growth', 'revenue', 'customer', 'market'],
+      creative: ['creative', 'innovative', 'artistic', 'original', 'concept', 'idea']
+    };
 
-RESPONSE FORMAT:
-Your response should be a complete, ready-to-use prompt that expands the given keywords into a comprehensive request. Structure it with the following sections: ${template.structure.sections.join(', ')}.`;
+    for (const [context, terms] of Object.entries(contexts)) {
+      if (terms.some(term => keywords.includes(term))) {
+        return context;
+      }
+    }
+    return 'general';
+  }
 
-    const userPrompt = this.createUserPrompt(keywords, taskType, template);
+  // Platform-specific optimizations
+  getPlatformOptimization(platform) {
+    const platformOptimizations = {
+      'perplexity.ai': {
+        name: 'Perplexity',
+        style: 'research-focused',
+        format: 'structured-analysis',
+        bulletStyle: '• ',
+        emphasis: 'citations and sources',
+        specialInstructions: 'Include research methodology and source verification requirements'
+      },
+      'chatgpt.com': {
+        name: 'ChatGPT',
+        style: 'conversational-detailed',
+        format: 'comprehensive-bullets',
+        bulletStyle: '• ',
+        emphasis: 'step-by-step reasoning',
+        specialInstructions: 'Use clear section headers and detailed bullet points'
+      },
+      'claude.ai': {
+        name: 'Claude',
+        style: 'analytical-structured',
+        format: 'hierarchical-bullets',
+        bulletStyle: '• ',
+        emphasis: 'logical flow and analysis',
+        specialInstructions: 'Organize with nested bullet points and clear reasoning chains'
+      },
+      'chat.deepseek.com': {
+        name: 'DeepSeek',
+        style: 'technical-precise',
+        format: 'code-focused-bullets',
+        bulletStyle: '• ',
+        emphasis: 'technical accuracy',
+        specialInstructions: 'Include technical specifications and implementation details'
+      },
+      'gemini.google.com': {
+        name: 'Gemini',
+        style: 'multimodal-comprehensive',
+        format: 'structured-comprehensive',
+        bulletStyle: '• ',
+        emphasis: 'multimodal integration',
+        specialInstructions: 'Consider text, image, and other media integration'
+      },
+      'general': {
+        name: 'Universal',
+        style: 'adaptable-structured',
+        format: 'universal-bullets',
+        bulletStyle: '• ',
+        emphasis: 'clarity and structure',
+        specialInstructions: 'Use clear, universally compatible formatting'
+      }
+    };
+
+    return platformOptimizations[platform] || platformOptimizations['general'];
+  }
+
+  // Main optimized prompt generation with platform detection
+  async generateOptimizedPrompt(keywords, taskType, platform = 'general') {
+    // Check cache first
+    const cacheKey = `${taskType}-${keywords}-${platform}`;
+    if (this.promptCache.has(cacheKey)) {
+      return this.promptCache.get(cacheKey);
+    }
+
+    const template = this.getOptimizedTemplate(taskType);
+    const analysis = this.analyzeKeywords(keywords);
+    const platformOptimization = this.getPlatformOptimization(platform);
+    
+    const optimizedSystemPrompt = this.buildSystemPrompt(template, analysis, platformOptimization);
+    const optimizedUserPrompt = this.buildUserPrompt(keywords, taskType, template, analysis, platformOptimization);
 
     try {
-      const response = await this.callAPI(enhancedSystemPrompt, userPrompt);
-      return this.formatStructuredResponse(response, taskType, template);
+      const response = await this.callAPIWithRetry(optimizedSystemPrompt, optimizedUserPrompt);
+      const formattedResponse = this.formatOptimizedResponse(response, taskType, template, platform);
+      
+      // Cache successful responses
+      this.promptCache.set(cacheKey, formattedResponse);
+      return formattedResponse;
     } catch (error) {
       throw error;
     }
   }
 
-  createUserPrompt(keywords, taskType, template) {
-    const taskDescriptions = {
-      'image-generation': 'visual art creation',
+  buildSystemPrompt(template, analysis, platformOptimization) {
+    const complexityGuidance = {
+      low: 'Focus on clarity and essential elements',
+      medium: 'Balance detail with conciseness',
+      high: 'Provide comprehensive, multi-faceted approach'
+    };
+
+    return `You are a ${template.roleDefinition}. ${template.systemFocus}.
+
+OPTIMIZATION DIRECTIVE: ${complexityGuidance[analysis.complexity]}
+CONTEXT: ${analysis.contextualHints} domain focus
+TECHNICAL LEVEL: ${analysis.technical ? 'High' : 'Standard'}
+PLATFORM: Optimized for ${platformOptimization.name} (${platformOptimization.style})
+
+PROMPT ENGINEERING FRAMEWORK:
+1. ROLE CLARITY: Define specific expert persona with clear credentials
+2. SYSTEMATIC APPROACH: Use structured thinking (analyze → strategize → implement → validate)
+3. OUTPUT STRUCTURE: Organize response using: ${template.outputStructure.join(' → ')}
+4. BULLET FORMATTING: Use ${platformOptimization.bulletStyle}for all lists and structured content
+5. QUALITY FOCUS: Emphasize ${template.keyPrinciples}
+
+PLATFORM SPECIFIC OPTIMIZATION:
+${platformOptimization.specialInstructions}
+
+Generate a professional, immediately actionable prompt optimized for ${analysis.complexity} complexity scenarios with detailed bullet point structure.`;
+  }
+
+  buildUserPrompt(keywords, taskType, template, analysis, platformOptimization) {
+    const taskMap = {
+      'image-generation': 'visual content creation',
       'code-generation': 'software development',
       'writing': 'content creation',
       'analysis': 'data analysis and research',
-      'creative': 'creative ideation and brainstorming',
+      'creative': 'creative ideation',
       'website': 'web development',
-      'general': 'general task completion'
+      'general': 'task completion'
     };
 
-    return `Transform these keywords into a comprehensive, professional prompt for ${taskDescriptions[taskType]}:
-
-KEYWORDS: ${keywords}
-TASK TYPE: ${taskType}
+    return `Create an optimized ${taskMap[taskType]} prompt from these keywords: "${analysis.primaryKeywords}"
 
 REQUIREMENTS:
-1. Expand these keywords into a detailed, structured prompt
-2. Include all sections: ${template.structure.sections.join(', ')}
-3. Make it specific enough to get excellent results from an AI
-4. Include relevant constraints, quality criteria, and context
-5. Ensure the prompt is immediately usable and comprehensive
-6. Focus on ${template.structure.focus}
+${platformOptimization.bulletStyle}Integrate advanced prompt engineering: role definition, systematic reasoning, structured output
+${platformOptimization.bulletStyle}Adapt to ${analysis.complexity} complexity level with ${analysis.contextualHints} context
+${platformOptimization.bulletStyle}Structure using: ${template.outputStructure.join(' | ')}
+${platformOptimization.bulletStyle}Focus on: ${template.keyPrinciples}
+${platformOptimization.bulletStyle}Include validation criteria and quality checkpoints
+${platformOptimization.bulletStyle}Ensure immediate usability with ${platformOptimization.name} AI system
+${platformOptimization.bulletStyle}Use detailed bullet point formatting for all structured content
+${platformOptimization.bulletStyle}Emphasize ${platformOptimization.emphasis}
 
-Create a prompt that a professional would use to get optimal results. The response should be the complete prompt only, ready to copy and paste into any AI system.`;
+PLATFORM OPTIMIZATION:
+${platformOptimization.bulletStyle}Format: ${platformOptimization.format}
+${platformOptimization.bulletStyle}Style: ${platformOptimization.style}
+${platformOptimization.bulletStyle}Special instructions: ${platformOptimization.specialInstructions}
+
+Deliver a comprehensive, structured prompt with detailed bullet points that maximizes AI performance and output quality.`;
   }
 
-  async callAPI(systemPrompt, userPrompt) {
-    const response = await fetch(`${this.apiBaseUrl}/chat/completions`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.apiKey}`
-      },
-      body: JSON.stringify({
-        model: this.model,
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: userPrompt }
-        ],
-        response_format: { type: 'text' },
-        max_tokens: 4096,
-        temperature: 0.7,
-        top_p: 0.9
-      })
-    });
+  async callAPIWithRetry(systemPrompt, userPrompt, retryCount = 0) {
+    try {
+      const response = await fetch(`${this.apiBaseUrl}/chat/completions`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${this.apiKey}`
+        },
+        body: JSON.stringify({
+          model: this.model,
+          messages: [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: userPrompt }
+          ],
+          response_format: { type: 'text' },
+          max_tokens: 2048, // Optimized for efficiency
+          temperature: 0.6, // Slightly more focused
+          top_p: 0.85 // Better quality control
+        })
+      });
 
-    if (!response.ok) {
-      throw new Error(`API request failed: ${response.status} - ${response.statusText}`);
+      if (!response.ok) {
+        throw new Error(`API request failed: ${response.status} - ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      return data.choices[0].message.content.trim();
+    } catch (error) {
+      if (retryCount < this.maxRetries) {
+        console.log(`Retry attempt ${retryCount + 1} after error:`, error.message);
+        await new Promise(resolve => setTimeout(resolve, this.retryDelay * (retryCount + 1)));
+        return this.callAPIWithRetry(systemPrompt, userPrompt, retryCount + 1);
+      }
+      throw error;
     }
-
-    const data = await response.json();
-    return data.choices[0].message.content.trim();
   }
 
-  formatStructuredResponse(response, taskType, template) {
-    // Add header and formatting to the response
+  formatOptimizedResponse(response, taskType, template, platform) {
     const taskEmojis = {
       'image-generation': '🎨',
       'code-generation': '💻',
@@ -182,249 +311,339 @@ Create a prompt that a professional would use to get optimal results. The respon
       'general': '⚡'
     };
 
+    const platformEmojis = {
+      'perplexity.ai': '🔍',
+      'chatgpt.com': '🤖',
+      'claude.ai': '🧠',
+      'chat.deepseek.com': '🔬',
+      'gemini.google.com': '✨',
+      'general': '🌐'
+    };
+
     const emoji = taskEmojis[taskType] || '⚡';
+    const platformEmoji = platformEmojis[platform] || '🌐';
     const taskName = taskType.split('-').map(word => 
       word.charAt(0).toUpperCase() + word.slice(1)
     ).join(' ');
 
-    return `${emoji} PROFESSIONAL ${taskName.toUpperCase()} PROMPT
+    return `${emoji} OPTIMIZED ${taskName.toUpperCase()} PROMPT
 
 ${response}
 
 ---
-📝 Generated by AI Prompt Engineer
-🎯 Optimized for: ${template.structure.focus}
-⚡ Ready to use with any AI system`;
+🚀 Generated by AI Prompt Engineer - Enhanced Edition
+${platformEmoji} Optimized for: ${platform.replace('.com', '').replace('.ai', '').toUpperCase()}
+🎯 Focus: ${template.keyPrinciples}
+⚡ Advanced patterns: Role definition, systematic reasoning, structured output
+💡 Ready for immediate use with detailed bullet point formatting`;
   }
 
-  generateFallbackPrompt(keywords, taskType) {
-    const templates = {
-      'image-generation': `🎨 PROFESSIONAL IMAGE GENERATION PROMPT
+  // Streamlined fallback prompts - Concise but effective
+  generateFallbackPrompt(keywords, taskType, platform = 'general') {
+    const template = this.getOptimizedTemplate(taskType);
+    const analysis = this.analyzeKeywords(keywords);
+    const platformOptimization = this.getPlatformOptimization(platform);
 
-Create a detailed, high-quality image based on: ${keywords}
-
-**Visual Composition:**
-- Main subject: [Elaborate on ${keywords}]
-- Composition style: [Professional photography/Digital art/Illustration]
-- Framing and perspective: [Close-up/Wide shot/Aerial view as appropriate]
-
-**Style & Aesthetics:**
-- Art style: [Photorealistic/Artistic/Stylized]
-- Color palette: [Complementary colors based on mood]
-- Lighting: [Natural/Studio/Dramatic lighting]
-
-**Technical Specifications:**
-- Resolution: High resolution, professional quality
-- Aspect ratio: 16:9 (adjust as needed)
-- Technical quality: Sharp focus, excellent detail
-
-**Mood & Atmosphere:**
-- Overall mood: [Based on context of ${keywords}]
-- Emotional impact: [Inspiring/Calming/Dynamic]
-
-**Additional Details:**
-- Background: [Complementary to main subject]
-- Any text or graphics: [If applicable]
-- Commercial usage: Suitable for professional/commercial use
-
-Generate this image with professional quality and attention to detail.`,
-
-      'code-generation': `💻 PROFESSIONAL CODE DEVELOPMENT PROMPT
-
-Develop a comprehensive solution for: ${keywords}
-
-**Project Overview:**
-- Primary objective: [Expand on ${keywords}]
-- Target platform/environment: [Specify based on context]
-- User requirements: [Based on keywords analysis]
-
-**Technical Requirements:**
-- Programming language: [Most suitable for the task]
-- Framework/libraries: [Industry standard choices]
-- Dependencies: [Minimal, well-maintained packages]
-
-**Architecture & Design:**
-- Code structure: Modular, maintainable design
-- Design patterns: Apply appropriate patterns
-- Error handling: Comprehensive error management
-
-**Implementation Guidelines:**
-- Code quality: Clean, readable, well-commented
-- Performance: Optimized for efficiency
-- Security: Follow security best practices
-- Testing: Include unit tests and validation
-
-**Documentation:**
-- Code comments: Clear, helpful comments
-- README: Setup and usage instructions
-- API documentation: If applicable
-
-Provide production-ready code that follows industry best practices.`,
-
-      'writing': `✍️ PROFESSIONAL CONTENT CREATION PROMPT
-
-Create compelling content about: ${keywords}
-
-**Content Objective:**
-- Primary goal: [Inform/Persuade/Entertain based on ${keywords}]
-- Key message: [Core message to communicate]
-- Desired outcome: [What should readers do/think/feel]
-
-**Target Audience:**
-- Demographics: [Based on context]
-- Knowledge level: [Beginner/Intermediate/Expert]
-- Interests and pain points: [Relevant to ${keywords}]
-
-**Structure & Format:**
-- Content type: [Article/Blog post/Copy/Report]
-- Length: [Appropriate for content type]
-- Format: Clear headings, scannable content
-
-**Tone & Style Guidelines:**
-- Voice: [Professional/Conversational/Academic]
-- Tone: [Authoritative/Friendly/Inspiring]
-- Style: Clear, engaging, purposeful
-
-**Key Elements to Include:**
-- Hook: Compelling opening
-- Main points: [3-5 key points about ${keywords}]
-- Evidence: Facts, examples, case studies
-- Call to action: Clear next steps
-
-Create content that engages readers and achieves the intended objective.`,
-
-      'analysis': `📊 PROFESSIONAL ANALYSIS PROMPT
-
-Conduct comprehensive analysis of: ${keywords}
-
-**Analysis Objectives:**
-- Primary research question: [Based on ${keywords}]
-- Scope of analysis: [Define boundaries]
-- Expected insights: [What we hope to discover]
-
-**Methodology & Approach:**
-- Analysis type: [Quantitative/Qualitative/Mixed methods]
-- Data sources: [Identify relevant data]
-- Analytical framework: [Choose appropriate methods]
-
-**Data Requirements:**
-- Primary data: [What data is needed]
-- Secondary sources: [Supporting information]
-- Quality criteria: [Data validation standards]
-
-**Expected Deliverables:**
-- Key findings: [Main insights]
-- Visualizations: [Charts, graphs, dashboards]
-- Recommendations: [Actionable insights]
-
-**Quality Assurance:**
-- Validation methods: [How to verify findings]
-- Bias mitigation: [Address potential biases]
-- Peer review: [Validation process]
-
-Provide thorough, objective analysis with clear, actionable insights.`,
-
-      'creative': `🎭 PROFESSIONAL CREATIVE PROMPT
-
-Generate innovative ideas for: ${keywords}
-
-**Creative Brief:**
-- Challenge: [Based on ${keywords}]
-- Creative objective: [What we want to achieve]
-- Success metrics: [How we'll measure success]
-
-**Inspiration & References:**
-- Style references: [Relevant creative styles]
-- Industry examples: [Best practices to emulate]
-- Innovation opportunities: [Where to be different]
-
-**Creative Constraints:**
-- Brand guidelines: [If applicable]
-- Technical limitations: [Any restrictions]
-- Budget considerations: [Practical constraints]
-
-**Target Outcomes:**
-- Primary deliverable: [Main creative output]
-- Secondary benefits: [Additional value]
-- Long-term impact: [Future implications]
-
-**Evaluation Criteria:**
-- Originality: [Uniqueness factor]
-- Feasibility: [Can it be executed]
-- Impact: [Potential for success]
-
-Create innovative, practical solutions that stand out in the marketplace.`,
-
-      'website': `🌐 PROFESSIONAL WEB DEVELOPMENT PROMPT
-
-Build a comprehensive website for: ${keywords}
-
-**Project Scope:**
-- Website purpose: [Based on ${keywords}]
-- Target audience: [Who will use this site]
-- Key objectives: [What the site should achieve]
-
-**Technical Stack:**
-- Frontend: HTML5, CSS3, JavaScript (modern frameworks)
-- Backend: [Choose appropriate technology]
-- Database: [If data storage needed]
-- Hosting: [Production environment]
-
-**Design Requirements:**
-- Visual style: Modern, professional design
-- User experience: Intuitive, user-friendly
-- Responsive design: Mobile-first approach
-- Accessibility: WCAG compliance
-
-**Functionality Specifications:**
-- Core features: [Based on ${keywords}]
-- User interactions: [How users will engage]
-- Content management: [How content is updated]
-- Integration needs: [Third-party services]
-
-**Performance & SEO:**
-- Loading speed: Optimized performance
-- SEO optimization: Search engine friendly
-- Analytics: User behavior tracking
-- Security: Best security practices
-
-Deliver a professional, fully functional website that meets modern standards.`,
-
-      'general': `⚡ PROFESSIONAL TASK COMPLETION PROMPT
-
-Complete the following task: ${keywords}
-
-**Task Definition:**
-- Objective: [Clear goal based on ${keywords}]
-- Scope: [What's included and excluded]
-- Success criteria: [How to measure completion]
-
-**Context & Requirements:**
-- Background information: [Relevant context]
-- Constraints: [Any limitations or requirements]
-- Quality standards: [Expected level of quality]
-
-**Approach & Methodology:**
-- Strategy: [How to approach the task]
-- Process: [Step-by-step methodology]
-- Resources needed: [Tools, information, support]
-
-**Expected Outputs:**
-- Primary deliverable: [Main output]
-- Supporting materials: [Additional outputs]
-- Format requirements: [How to present results]
-
-**Success Criteria:**
-- Quality measures: [What makes it successful]
-- Completion markers: [How we know it's done]
-- Review process: [Validation steps]
-
-Execute this task with professional excellence and attention to detail.`
+    const fallbackTemplates = {
+      'image-generation': this.generateImageFallback(keywords, template, analysis, platformOptimization),
+      'code-generation': this.generateCodeFallback(keywords, template, analysis, platformOptimization),
+      'writing': this.generateWritingFallback(keywords, template, analysis, platformOptimization),
+      'analysis': this.generateAnalysisFallback(keywords, template, analysis, platformOptimization),
+      'creative': this.generateCreativeFallback(keywords, template, analysis, platformOptimization),
+      'website': this.generateWebsiteFallback(keywords, template, analysis, platformOptimization),
+      'general': this.generateGeneralFallback(keywords, template, analysis, platformOptimization)
     };
 
-    return templates[taskType] || templates['general'];
+    return fallbackTemplates[taskType] || fallbackTemplates['general'];
+  }
+
+  generateImageFallback(keywords, template, analysis, platformOptimization) {
+    const bullet = platformOptimization.bulletStyle;
+    return `🎨 OPTIMIZED IMAGE GENERATION PROMPT
+
+**ROLE & OBJECTIVE:**
+You are a ${template.roleDefinition}. Create a detailed visual representation of: ${keywords}
+
+**SYSTEMATIC APPROACH:**
+${bullet}ANALYZE: Break down "${analysis.primaryKeywords}" into core visual elements
+${bullet}COMPOSE: Structure elements using professional design principles
+${bullet}SPECIFY: Define technical requirements for production quality
+${bullet}VALIDATE: Ensure commercial viability and brand consistency
+
+**VISUAL SPECIFICATIONS:**
+${bullet}Concept: [Expand ${keywords} with specific visual details]
+${bullet}Style: [Professional/Artistic/Commercial - based on context]
+${bullet}Technical Requirements:
+  ${bullet}4K resolution minimum
+  ${bullet}Professional lighting setup
+  ${bullet}Optimal composition rules
+  ${bullet}Color palette optimization
+${bullet}Quality Standards:
+  ${bullet}Sharp focus throughout
+  ${bullet}Balanced exposure
+  ${bullet}Commercial-grade appeal
+
+**DELIVERABLE:**
+Generate a professional-quality image that effectively communicates the concept with technical excellence and commercial appeal.
+
+**PLATFORM OPTIMIZATION FOR ${platformOptimization.name.toUpperCase()}:**
+${bullet}${platformOptimization.specialInstructions}
+${bullet}Format style: ${platformOptimization.format}
+${bullet}Emphasis on: ${platformOptimization.emphasis}`;
+  }
+
+  generateCodeFallback(keywords, template, analysis, platformOptimization) {
+    const bullet = platformOptimization.bulletStyle;
+    return `💻 OPTIMIZED CODE DEVELOPMENT PROMPT
+
+**ROLE & OBJECTIVE:**
+You are a ${template.roleDefinition}. Develop a comprehensive solution for: ${keywords}
+
+**DEVELOPMENT METHODOLOGY:**
+${bullet}ANALYZE: Understand requirements for "${analysis.primaryKeywords}"
+${bullet}DESIGN: Create clean, scalable architecture
+${bullet}IMPLEMENT: Write production-ready code with best practices
+${bullet}VALIDATE: Include testing and documentation
+
+**TECHNICAL APPROACH:**
+${bullet}Language Selection:
+  ${bullet}Optimal for ${keywords}
+  ${bullet}Performance considerations
+  ${bullet}Ecosystem compatibility
+${bullet}Architecture Design:
+  ${bullet}Clean, modular structure
+  ${bullet}Maintainable design patterns
+  ${bullet}Scalability planning
+${bullet}Standards & Practices:
+  ${bullet}Industry best practices
+  ${bullet}SOLID principles
+  ${bullet}Code review protocols
+${bullet}Quality Assurance:
+  ${bullet}80%+ test coverage
+  ${bullet}Comprehensive documentation
+  ${bullet}Performance benchmarks
+
+**DELIVERABLE:**
+Provide production-ready code with setup instructions, tests, and documentation that demonstrates professional development standards.
+
+**PLATFORM OPTIMIZATION FOR ${platformOptimization.name.toUpperCase()}:**
+${bullet}${platformOptimization.specialInstructions}
+${bullet}Format style: ${platformOptimization.format}
+${bullet}Emphasis on: ${platformOptimization.emphasis}`;
+  }
+
+  generateWritingFallback(keywords, template, analysis, platformOptimization) {
+    const bullet = platformOptimization.bulletStyle;
+    return `✍️ OPTIMIZED CONTENT CREATION PROMPT
+
+**ROLE & OBJECTIVE:**
+You are a ${template.roleDefinition}. Create compelling content about: ${keywords}
+
+**CONTENT STRATEGY:**
+${bullet}RESEARCH: Analyze "${analysis.primaryKeywords}" and target audience
+${bullet}STRUCTURE: Organize for maximum engagement and clarity
+${bullet}OPTIMIZE: Ensure SEO and readability standards
+${bullet}VALIDATE: Confirm value delivery and call-to-action effectiveness
+
+**CONTENT FRAMEWORK:**
+${bullet}Objective: [Inform/Persuade/Engage based on ${keywords}]
+${bullet}Audience Definition:
+  ${bullet}Demographics and psychographics
+  ${bullet}Knowledge level and expertise
+  ${bullet}Pain points and motivations
+${bullet}Structure Plan:
+  ${bullet}Compelling hook/introduction
+  ${bullet}Main content with supporting evidence
+  ${bullet}Clear call-to-action
+${bullet}Quality Standards:
+  ${bullet}Professional tone and voice
+  ${bullet}Fact-based, actionable insights
+  ${bullet}SEO optimization
+  ${bullet}Readability and engagement
+
+**DELIVERABLE:**
+Create engaging, well-researched content that achieves specific objectives while providing genuine value to readers.
+
+**PLATFORM OPTIMIZATION FOR ${platformOptimization.name.toUpperCase()}:**
+${bullet}${platformOptimization.specialInstructions}
+${bullet}Format style: ${platformOptimization.format}
+${bullet}Emphasis on: ${platformOptimization.emphasis}`;
+  }
+
+  generateAnalysisFallback(keywords, template, analysis, platformOptimization) {
+    const bullet = platformOptimization.bulletStyle;
+    return `📊 OPTIMIZED ANALYSIS PROMPT
+
+**ROLE & OBJECTIVE:**
+You are a ${template.roleDefinition}. Conduct comprehensive analysis of: ${keywords}
+
+**ANALYTICAL METHODOLOGY:**
+${bullet}HYPOTHESIZE: Define research questions for "${analysis.primaryKeywords}"
+${bullet}COLLECT: Identify relevant, high-quality data sources
+${bullet}ANALYZE: Apply appropriate statistical methods and frameworks
+${bullet}VALIDATE: Verify findings and assess reliability
+
+**RESEARCH FRAMEWORK:**
+${bullet}Research Objectives:
+  ${bullet}Define specific questions based on ${keywords}
+  ${bullet}Establish success metrics
+  ${bullet}Set scope and limitations
+${bullet}Methodology Selection:
+  ${bullet}Quantitative/Qualitative/Mixed methods
+  ${bullet}Statistical significance requirements
+  ${bullet}Sample size calculations
+${bullet}Data Collection:
+  ${bullet}Primary and secondary sources
+  ${bullet}Quality assurance protocols
+  ${bullet}Bias mitigation strategies
+${bullet}Analysis Tools:
+  ${bullet}Statistical software platforms
+  ${bullet}Visualization tools
+  ${bullet}Reporting frameworks
+${bullet}Quality Control:
+  ${bullet}Peer review process
+  ${bullet}Confidence intervals
+  ${bullet}Reproducibility checks
+
+**DELIVERABLE:**
+Provide rigorous analysis with executive summary, methodology, findings, and actionable recommendations.
+
+**PLATFORM OPTIMIZATION FOR ${platformOptimization.name.toUpperCase()}:**
+${bullet}${platformOptimization.specialInstructions}
+${bullet}Format style: ${platformOptimization.format}
+${bullet}Emphasis on: ${platformOptimization.emphasis}`;
+  }
+
+  generateCreativeFallback(keywords, template, analysis, platformOptimization) {
+    const bullet = platformOptimization.bulletStyle;
+    return `🎭 OPTIMIZED CREATIVE PROMPT
+
+**ROLE & OBJECTIVE:**
+You are a ${template.roleDefinition}. Generate innovative concepts for: ${keywords}
+
+**CREATIVE METHODOLOGY:**
+${bullet}INSPIRE: Research trends and successful examples for "${analysis.primaryKeywords}"
+${bullet}IDEATE: Generate multiple concepts using proven techniques
+${bullet}DEVELOP: Refine promising ideas with practical considerations
+${bullet}VALIDATE: Test against objectives and feasibility constraints
+
+**INNOVATION FRAMEWORK:**
+${bullet}Creative Brief:
+  ${bullet}Define challenge and objectives for ${keywords}
+  ${bullet}Target audience and market context
+  ${bullet}Success criteria and metrics
+${bullet}Constraints & Parameters:
+  ${bullet}Brand guidelines and voice
+  ${bullet}Technical limitations
+  ${bullet}Budget considerations
+  ${bullet}Timeline requirements
+${bullet}Ideation Approach:
+  ${bullet}Divergent thinking techniques
+  ${bullet}User-centered design principles
+  ${bullet}Strategic alignment checks
+  ${bullet}Cross-industry inspiration
+${bullet}Evaluation Metrics:
+  ${bullet}Originality and uniqueness
+  ${bullet}Feasibility assessment
+  ${bullet}Market impact potential
+  ${bullet}Implementation complexity
+
+**DELIVERABLE:**
+Create innovative, practical concepts with clear implementation paths and success measurements.
+
+**PLATFORM OPTIMIZATION FOR ${platformOptimization.name.toUpperCase()}:**
+${bullet}${platformOptimization.specialInstructions}
+${bullet}Format style: ${platformOptimization.format}
+${bullet}Emphasis on: ${platformOptimization.emphasis}`;
+  }
+
+  generateWebsiteFallback(keywords, template, analysis, platformOptimization) {
+    const bullet = platformOptimization.bulletStyle;
+    return `🌐 OPTIMIZED WEB DEVELOPMENT PROMPT
+
+**ROLE & OBJECTIVE:**
+You are a ${template.roleDefinition}. Build a comprehensive website for: ${keywords}
+
+**DEVELOPMENT STRATEGY:**
+${bullet}PLAN: Define scope and requirements for "${analysis.primaryKeywords}"
+${bullet}DESIGN: Create user-centered UX/UI with modern standards
+${bullet}DEVELOP: Implement with performance and accessibility focus
+${bullet}OPTIMIZE: Ensure SEO, security, and cross-browser compatibility
+
+**TECHNICAL FRAMEWORK:**
+${bullet}Technology Stack:
+  ${bullet}Modern frontend/backend technologies suited for ${keywords}
+  ${bullet}Framework selection rationale
+  ${bullet}Third-party integrations
+${bullet}Design Specifications:
+  ${bullet}Responsive, mobile-first approach
+  ${bullet}Accessibility standards (WCAG 2.1 AA)
+  ${bullet}User experience optimization
+  ${bullet}Brand consistency and visual hierarchy
+${bullet}Performance Requirements:
+  ${bullet}Core Web Vitals compliance
+  ${bullet}Page load optimization
+  ${bullet}CDN and caching strategies
+  ${bullet}Performance monitoring setup
+${bullet}Quality Assurance:
+  ${bullet}Cross-browser testing protocols
+  ${bullet}Security best practices
+  ${bullet}SEO optimization checklist
+  ${bullet}Code review standards
+
+**DELIVERABLE:**
+Build a professional, fully functional website with technical documentation and deployment guide.
+
+**PLATFORM OPTIMIZATION FOR ${platformOptimization.name.toUpperCase()}:**
+${bullet}${platformOptimization.specialInstructions}
+${bullet}Format style: ${platformOptimization.format}
+${bullet}Emphasis on: ${platformOptimization.emphasis}`;
+  }
+
+  generateGeneralFallback(keywords, template, analysis, platformOptimization) {
+    const bullet = platformOptimization.bulletStyle;
+    return `⚡ OPTIMIZED TASK COMPLETION PROMPT
+
+**ROLE & OBJECTIVE:**
+You are a ${template.roleDefinition}. Complete the task: ${keywords}
+
+**SYSTEMATIC APPROACH:**
+${bullet}ANALYZE: Understand requirements and constraints for "${analysis.primaryKeywords}"
+${bullet}STRATEGIZE: Develop comprehensive approach with risk mitigation
+${bullet}EXECUTE: Implement using best practices and quality standards
+${bullet}VALIDATE: Ensure deliverables meet objectives and quality criteria
+
+**IMPLEMENTATION FRAMEWORK:**
+${bullet}Scope Definition:
+  ${bullet}Define based on ${keywords}
+  ${bullet}Identify key deliverables
+  ${bullet}Set success metrics
+  ${bullet}Establish timeline milestones
+${bullet}Methodology:
+  ${bullet}Systematic problem-solving approach
+  ${bullet}Iterative refinement process
+  ${bullet}Risk assessment and mitigation
+  ${bullet}Quality checkpoints
+${bullet}Quality Standards:
+  ${bullet}Professional standards compliance
+  ${bullet}Stakeholder alignment verification
+  ${bullet}Industry best practices
+  ${bullet}Performance benchmarks
+${bullet}Validation Process:
+  ${bullet}Success metrics evaluation
+  ${bullet}Peer review protocol
+  ${bullet}Continuous improvement feedback
+  ${bullet}Documentation standards
+
+**DELIVERABLE:**
+Provide comprehensive solution with clear implementation guidance and quality assurance measures.
+
+**PLATFORM OPTIMIZATION FOR ${platformOptimization.name.toUpperCase()}:**
+${bullet}${platformOptimization.specialInstructions}
+${bullet}Format style: ${platformOptimization.format}
+${bullet}Emphasis on: ${platformOptimization.emphasis}`;
   }
 }
 
-// Initialize the enhanced prompt engineer
+// Initialize the optimized prompt engineer
 new PromptEngineer();

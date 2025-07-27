@@ -2,6 +2,39 @@
 let promptInterface = null;
 let isInterfaceVisible = false;
 
+// Platform detection for optimization
+function detectCurrentPlatform() {
+  const hostname = window.location.hostname.toLowerCase();
+  const supportedPlatforms = {
+    'chatgpt.com': 'chatgpt',
+    'chat.openai.com': 'chatgpt',
+    'claude.ai': 'claude',
+    'perplexity.ai': 'perplexity',
+    'chat.deepseek.com': 'deepseek',
+    'gemini.google.com': 'gemini',
+    'bard.google.com': 'gemini',
+    'copilot.microsoft.com': 'copilot',
+    'poe.com': 'poe',
+    'huggingface.co': 'huggingface'
+  };
+
+  // Check for exact matches first
+  for (const [domain, platform] of Object.entries(supportedPlatforms)) {
+    if (hostname === domain || hostname.endsWith('.' + domain)) {
+      return platform;
+    }
+  }
+
+  // Check for partial matches (e.g., subdomains)
+  for (const [domain, platform] of Object.entries(supportedPlatforms)) {
+    if (hostname.includes(domain.split('.')[0])) {
+      return platform;
+    }
+  }
+
+  return 'general'; // Default fallback
+}
+
 // Initialize the extension when DOM is ready
 document.addEventListener('DOMContentLoaded', initializeExtension);
 if (document.readyState === 'loading') {
@@ -11,17 +44,22 @@ if (document.readyState === 'loading') {
 }
 
 function initializeExtension() {
-  console.log('AI Prompt Engineer: Initializing on', window.location.hostname);
+  const platform = detectCurrentPlatform();
+  console.log(`AI Prompt Engineer: Initializing on ${window.location.hostname} (detected: ${platform})`);
   
   // Wait a bit for the page to fully load
   setTimeout(() => {
     createPromptInterface();
     addToggleButton();
+    addPlatformIndicator(platform);
   }, 2000);
 }
 
 function createPromptInterface() {
   if (promptInterface) return;
+
+  const platform = detectCurrentPlatform();
+  const platformInfo = getPlatformOptimizationInfo(platform);
 
   promptInterface = document.createElement('div');
   promptInterface.id = 'ai-prompt-engineer-interface';
@@ -29,6 +67,9 @@ function createPromptInterface() {
     <div class="ape-container">
       <div class="ape-header">
         <h3>AI Prompt Engineer</h3>
+        <div class="ape-platform-badge">
+          ${platformInfo.emoji} ${platformInfo.name}
+        </div>
         <button class="ape-close" onclick="togglePromptInterface()">×</button>
       </div>
       <div class="ape-content">
@@ -48,13 +89,16 @@ function createPromptInterface() {
             <option value="website">🌐 Website Development</option>
           </select>
         </div>
+        <div class="ape-platform-info">
+          <small>✨ Optimized for ${platformInfo.name} with ${platformInfo.style} formatting</small>
+        </div>
         <div class="ape-actions">
-          <button id="ape-generate" class="ape-btn-primary">✨ Generate Prompt</button>
+          <button id="ape-generate" class="ape-btn-primary">✨ Generate ${platformInfo.name} Prompt</button>
           <button id="ape-clear" class="ape-btn-secondary">🗑️ Clear</button>
         </div>
         <div class="ape-output">
           <label>Generated Prompt:</label>
-          <textarea id="ape-result" readonly placeholder="Your expertly crafted prompt will appear here..."></textarea>
+          <textarea id="ape-result" readonly placeholder="Your expertly crafted ${platformInfo.name}-optimized prompt will appear here..."></textarea>
           <div class="ape-output-actions">
             <button id="ape-copy" class="ape-btn-secondary">📋 Copy</button>
             <button id="ape-insert" class="ape-btn-primary">🚀 Insert</button>
@@ -62,7 +106,7 @@ function createPromptInterface() {
         </div>
         <div id="ape-loading" class="ape-loading" style="display: none;">
           <div class="ape-spinner"></div>
-          <span>Crafting your professional prompt...</span>
+          <span>Crafting your ${platformInfo.name}-optimized prompt...</span>
         </div>
       </div>
     </div>
@@ -95,6 +139,50 @@ function addToggleButton() {
   toggleButton.onclick = togglePromptInterface;
   
   document.body.appendChild(toggleButton);
+}
+
+function addPlatformIndicator(platform) {
+  const platformInfo = getPlatformOptimizationInfo(platform);
+  
+  // Create a small platform indicator that appears briefly
+  const indicator = document.createElement('div');
+  indicator.id = 'ape-platform-indicator';
+  indicator.innerHTML = `
+    <div style="
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+      z-index: 10001;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    ">
+      ${platformInfo.emoji} AI Prompt Engineer: ${platformInfo.name} optimization active
+    </div>
+  `;
+  
+  document.body.appendChild(indicator);
+  
+  // Show and hide the indicator
+  setTimeout(() => {
+    indicator.firstElementChild.style.opacity = '1';
+  }, 500);
+  
+  setTimeout(() => {
+    indicator.firstElementChild.style.opacity = '0';
+    setTimeout(() => {
+      if (indicator.parentNode) {
+        indicator.parentNode.removeChild(indicator);
+      }
+    }, 300);
+  }, 3000);
 }
 
 function attachEventListeners() {
@@ -164,6 +252,7 @@ function togglePromptInterface() {
 async function generatePrompt() {
   const keywords = document.getElementById('ape-keywords').value.trim();
   const taskType = document.getElementById('ape-task-type').value;
+  const platform = detectCurrentPlatform(); // Get current platform
   const loading = document.getElementById('ape-loading');
   const resultTextarea = document.getElementById('ape-result');
 
@@ -186,7 +275,7 @@ async function generatePrompt() {
   try {
     const response = await new Promise((resolve, reject) => {
       chrome.runtime.sendMessage(
-        { action: 'generatePrompt', keywords, taskType },
+        { action: 'generatePrompt', keywords, taskType, platform }, // Include platform
         (response) => {
           if (chrome.runtime.lastError) {
             reject(new Error(chrome.runtime.lastError.message));
@@ -197,7 +286,7 @@ async function generatePrompt() {
             resolve(response.prompt);
           } else if (response && response.fallback) {
             // Use fallback if API fails but fallback is available
-            showNotification('Using fallback prompt template', 'info');
+            showNotification(`Using ${platform}-optimized fallback template`, 'info');
             resolve(response.fallback);
           } else {
             reject(new Error(response ? response.error : 'No response received'));
@@ -208,7 +297,7 @@ async function generatePrompt() {
 
     resultTextarea.value = response;
     loading.style.display = 'none';
-    showNotification('Professional prompt generated successfully!', 'success');
+    showNotification(`${platform.charAt(0).toUpperCase() + platform.slice(1)}-optimized prompt generated!`, 'success');
     
     // Update UI to show prompt is ready
     const insertBtn = document.getElementById('ape-insert');
@@ -221,31 +310,45 @@ async function generatePrompt() {
     console.error('Error generating prompt:', error);
     loading.style.display = 'none';
     
-    // Provide a comprehensive fallback prompt
-    const fallbackPrompt = createAdvancedFallbackPrompt(keywords, taskType);
+    // Provide a comprehensive fallback prompt with platform optimization
+    const fallbackPrompt = createAdvancedFallbackPrompt(keywords, taskType, platform);
     resultTextarea.value = fallbackPrompt;
     
-    showNotification('Generated offline template. Try again for AI-enhanced version.', 'warning');
+    showNotification(`Generated ${platform}-optimized offline template. Try again for AI-enhanced version.`, 'warning');
   }
 }
 
-function createAdvancedFallbackPrompt(keywords, taskType) {
+function createAdvancedFallbackPrompt(keywords, taskType, platform = 'general') {
   const taskInfo = getTaskTypeInfo(taskType);
+  const platformInfo = getPlatformOptimizationInfo(platform);
   
   return `${taskInfo.emoji} ${taskInfo.title.toUpperCase()} PROMPT
+${platformInfo.emoji} Optimized for ${platformInfo.name}
 
 **Objective:** Create ${taskInfo.description} based on: ${keywords}
 
 ${taskInfo.template}
 
+**Platform-Specific Optimization (${platformInfo.name}):**
+${platformInfo.bulletFormat} ${platformInfo.optimization}
+${platformInfo.bulletFormat} Use ${platformInfo.style} formatting style
+${platformInfo.bulletFormat} Focus on ${platformInfo.focus} approach
+${platformInfo.bulletFormat} Leverage ${platformInfo.strength} capabilities
+
 **Quality Requirements:**
 ✅ Professional-grade output
-✅ Attention to detail and accuracy
+✅ Attention to detail and accuracy  
 ✅ Industry best practices
 ✅ User-focused approach
 ✅ Scalable and maintainable solution
 
 **Keywords Focus:** ${keywords}
+
+**${platformInfo.name}-Specific Instructions:**
+${platformInfo.bulletFormat} Structure response with clear ${platformInfo.bulletFormat} bullet points
+${platformInfo.bulletFormat} Include detailed sub-points for complex topics
+${platformInfo.bulletFormat} Use hierarchical organization for better readability
+${platformInfo.bulletFormat} End with actionable next steps
 
 **Additional Notes:**
 - Prioritize quality over speed
@@ -254,8 +357,69 @@ ${taskInfo.template}
 - Include documentation where appropriate
 
 ---
-🤖 Generated by AI Prompt Engineer (Offline Template)
+🤖 Generated by AI Prompt Engineer (${platformInfo.name}-Optimized Template)
 💡 For enhanced prompts, ensure internet connection and try again`;
+}
+
+function getPlatformOptimizationInfo(platform) {
+  const platformConfigs = {
+    'perplexity': {
+      name: 'Perplexity',
+      emoji: '🔍',
+      bulletFormat: '•',
+      optimization: 'Research-focused detailed analysis with comprehensive sourcing',
+      style: 'structured analytical',
+      focus: 'evidence-based research',
+      strength: 'information synthesis and fact-checking'
+    },
+    'chatgpt': {
+      name: 'ChatGPT',
+      emoji: '🤖',
+      bulletFormat: '●',
+      optimization: 'Conversational yet comprehensive with detailed explanations',
+      style: 'conversational-detailed',
+      focus: 'step-by-step guidance',
+      strength: 'contextual understanding and dialogue'
+    },
+    'claude': {
+      name: 'Claude',
+      emoji: '🎯',
+      bulletFormat: '▪',
+      optimization: 'Analytical structured responses with hierarchical thinking',
+      style: 'analytical-structured',
+      focus: 'systematic problem-solving',
+      strength: 'nuanced analysis and ethical reasoning'
+    },
+    'deepseek': {
+      name: 'DeepSeek',
+      emoji: '⚡',
+      bulletFormat: '→',
+      optimization: 'Technical precision with code-focused implementation details',
+      style: 'technical-precise',
+      focus: 'implementation excellence',
+      strength: 'technical depth and coding expertise'
+    },
+    'gemini': {
+      name: 'Gemini',
+      emoji: '✨',
+      bulletFormat: '◆',
+      optimization: 'Multimodal comprehensive analysis with visual integration',
+      style: 'multimodal-comprehensive',
+      focus: 'holistic understanding',
+      strength: 'cross-modal reasoning and integration'
+    },
+    'general': {
+      name: 'Universal LLM',
+      emoji: '🌐',
+      bulletFormat: '•',
+      optimization: 'Universal compatibility with platform-agnostic structure',
+      style: 'adaptive-comprehensive',
+      focus: 'broad compatibility',
+      strength: 'universal prompt engineering principles'
+    }
+  };
+
+  return platformConfigs[platform] || platformConfigs['general'];
 }
 
 function getTaskTypeInfo(taskType) {
